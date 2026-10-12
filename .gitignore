@@ -1,0 +1,6 @@
+.DS_Store
+# Eval run outputs (skill-creator workspaces)
+*-workspace/
+# Packaged skill files
+*.skill
+*.zip
