@@ -99,7 +99,7 @@ Use this structure every time. Keep it short: the headline answers the question;
 **Receipt**
 - Source: <datasource name> (or view: <view name>)
 - Metrics: <standard metric name> = <plain-English definition>
-- Filters: <period · vertical · super partner · traffic type>
+- Filters: <period · vertical · super partner · any other filters applied>
 - Assumptions: <defaults applied>
 - Data through: <latest date in the result>
 - Tableau calls: <n>
@@ -108,11 +108,6 @@ Use this structure every time. Keep it short: the headline answers the question;
 
 - **CSV:** attach the full result as a CSV when it has more than 10 rows, or when the user asks.
 - **Chart:** add a simple line or bar chart only when it genuinely helps (e.g., a trend over many periods) or when the user asks.
-
-## Row-level data and forecasts
-
-- **Row-level and personal data:** allowed when available in Tableau. The 500-row default still applies.
-- **Forecasts:** allowed when the user wants one. Label every forecast **"Claude's estimate, not from Tableau"**.
 
 ## Out of scope
 
@@ -126,7 +121,7 @@ Reports go to the BI team by email from the user's Gmail. TODO(BI): BI team emai
 **When to prepare a report**
 - The user asks (e.g., "report this", "this number looks wrong").
 - A discovery or metadata call was needed (see "Tableau call rules"), so a card or the routing table needs updating.
-- A query still fails after one retry.
+- A query still fails after max retries.
 
 **What the report contains**
 - **The user's note:** what's wrong, in their words.
