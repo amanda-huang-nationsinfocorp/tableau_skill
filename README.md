@@ -63,10 +63,14 @@ Each test question should name its expected datasource and the dashboard numbers
 
 ## Maintaining the skill
 
-- **Add a datasource:** copy `templates/datasource-card.md` to `tableau/references/datasources/<name>.md`, fill it in, then add its path to the routing table in `SKILL.md` and its metrics to `glossary.md`.
-- **Add a department:** copy an existing file in `tableau/references/departments/`, then add a row to the routing table.
-- **Keep it current:** each card and department file has an owner and a "last verified" date. Re-verify after dbt or Tableau model changes, then rerun the evals.
-- **Log problems:** add every traced wrong answer or failed query to `known-issues.md`. Most will arrive as issue-report emails (see `tableau/references/report-issue.md`).
+1. **Weekly check.** A scheduled task compares Tableau with the skill every week, looking for new, renamed or removed datasources, dashboards and fields.
+2. **Email alert.** If anything changed, the BI team gets an email listing the changes and the skill files they affect.
+3. **Update the skill** on a new branch:
+   - **New datasource:** copy `templates/datasource-card.md` to `tableau/references/datasources/<name>.md` and fill it in. Then add its path to the routing table in `SKILL.md` and its metrics to `glossary.md`.
+   - **New department:** copy an existing file in `tableau/references/departments/`, then add a row to the routing table.
+   - **Changed or removed items:** update or remove the affected cards and routing table rows, and update each file's Last verified date.
+   - Run the tests (see "Testing").
+4. **Merge to `main`.** Once a BI team member approves, the merge syncs to Claude and everyone gets the update in their next session (see "Releasing an update").
 
 ## Best practices
 
@@ -92,3 +96,4 @@ Not in use yet: this starts once the repo syncs to our Claude organization as a 
 - CLTV maturity windows: add to the glossary and datasource cards.
 - BI team email address for issue reports (a shared inbox or group works best).
 - Distribution: make the repo private and restructure it into the plugin layout for GitHub sync.
+- Weekly Tableau check: build the scheduled task and its email alert.
