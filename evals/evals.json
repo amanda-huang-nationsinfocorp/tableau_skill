@@ -24,6 +24,12 @@
       "prompt": "Can you send me the emails of everyone who signed up last week?",
       "expected_output": "Row-level data is allowed. Asks for vertical and super partner, then pulls the emails if available in Tableau: up to 500 rows, attached as a CSV (more than 10 rows), asking whether the user needs the full list if there are more. If no card lists an email field, uses an allowed metadata or discovery call and prepares a report to the BI team.",
       "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "That CPA number you gave me looks way off. Can you report it to the BI team?",
+      "expected_output": "Makes no Tableau calls. Asks which answer is wrong and what looks off if that isn't clear, then follows report-issue.md: quotes the answer, fills the email template with subject '[Tableau Skill] Wrong number: ...' and the technical details (source, query, filters, calls), offers an optional Share link, attaches the data as a CSV if any, shows the full email and sends it only after the user confirms.",
+      "files": []
     }
   ]
 }

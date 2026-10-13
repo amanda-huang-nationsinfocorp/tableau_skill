@@ -20,7 +20,7 @@ Answer business questions with numbers that match our Tableau dashboards, using 
 
 Follow these steps in order. Steps 1–4 and 6–7 use only the files in this skill, with no Tableau calls, unless the data isn't in the routing table (step 4).
 
-1. **Identify the department.** Use the routing table below. Route by the question's topic first; use the user's own department only as a tie-breaker. If it's still unclear, ask once.
+1. **Identify the department.** Use the routing table below. Route by the question's topic first; use the user's own team only as a tie-breaker. If it's still unclear, ask once which department's data they need, offering the departments in the routing table as options. 
 2. **Understand the question.** Map the user's words to standard metric names with `references/glossary.md`, then apply any department vocabulary from the department file.
 3. **Clarify or assume.** See "Ask vs. assume" below. Ask at most 3 short questions, and only for things that change the answer. Offer valid values from the datasource card as options.
 4. **Route to data.**
@@ -49,6 +49,7 @@ If you can't get a reliable answer at any step, follow `references/fail-safe.md`
 | Customer Service | CO, CSR, TSR | CSR/TSR performance, ticket resolution efficiency, customer cancels (folder description) | `Customer Service` (CSR and TSR subfolders; no workbooks visible yet) | TODO | `references/departments/customer-service.md` | TODO |
 | Split Test | ab testing | A/B test results by test ID (e.g., T1367): variant comparison, test breakdown, user journey | `Split Test` | None: each test dashboard covers one test | `references/departments/split-test.md` | `references/datasources/split-test-core.md`; `references/datasources/split-test-user-journey.md` |
 | Company Overview | TODO | company-wide KPIs; daily RE and Credco KPIs; company intraday monitor; company data explorer; user action tracking | `Company Overview` | All traffic | `references/departments/company-overview.md` | `references/datasources/daily-core-business-overview.md`; `references/datasources/intraday-hourly-conversion.md`; `references/datasources/user-action-tracking.md` |
+| Executive Team | CEO, executives, exec team, leadership, C-suite | Usually company-wide KPIs, so use Company Overview; if the question is about a specific department's topic, route by topic instead | `Company Overview` | All traffic (same as Company Overview) | `references/departments/company-overview.md` | `references/datasources/daily-core-business-overview.md`; `references/datasources/intraday-hourly-conversion.md`; `references/datasources/user-action-tracking.md` |
 
 Datasource cards live at `references/datasources/<datasource-name>.md`. List each card's full path in the table above so it can be opened directly.
 
@@ -101,10 +102,9 @@ Use this structure every time. Keep it short: the headline answers the question;
 **Receipt**
 - Source: <datasource name> (or view: <view name>)
 - Metrics: <standard metric name> = <plain-English definition>
-- Filters: <period · vertical · super partner · any other filters applied>
+- Filters: <date range · vertical · super partner · any other filters applied>
 - Assumptions: <defaults applied>
-- Data through: <latest date in the result>
-- Tableau calls: <n>
+- Tableau API calls: <n>
 - Dig deeper: <dashboard link>
 ```
 
@@ -118,20 +118,13 @@ Decline clearly and point to the right place (see `references/fail-safe.md`):
 
 ## Reporting issues to the BI team
 
-Reports go to the BI team by email from the user's Gmail. TODO(BI): BI team email address; finalize the sending steps.
-
-**When to prepare a report**
+Reports are emails from the user's own Gmail to the BI team. Prepare one when:
 - The user asks (e.g., "report this", "this number looks wrong").
 - A discovery or metadata call was needed (see "Tableau call rules"), so a card or the routing table needs updating.
 - A query still fails after max retries.
+- A QA check fails and can't be resolved.
 
-**What the report contains**
-- **The user's note:** what's wrong, in their words.
-- **The relevant part of the conversation, quoted.** You can't see text the user highlights in the app, so ask them to point to it (e.g., "the second answer") or paste it.
-- **Technical details:** the question, datasource or view, the query, filters, any Tableau error, and the number of Tableau calls.
-- **Optional link to the whole conversation:** the user creates it with the Share button (claude.ai on the web) and pastes it. Shared chats hide raw Tableau results, so the report itself must include the query and the numbers.
-
-Show the user the full email and send it only after they confirm.
+Follow `references/report-issue.md` for the steps and the email template. Always show the user the full email and send it only after they confirm.
 
 ## Reference files
 
@@ -146,3 +139,4 @@ Open only what the current step needs.
 | `references/known-issues.md` | Step 5: known data and tool quirks, before every query |
 | `references/qa-template.md` | Step 6: checks before answering |
 | `references/fail-safe.md` | Whenever you can't give a reliable answer |
+| `references/report-issue.md` | Step 9: whenever a report to the BI team is needed |

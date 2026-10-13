@@ -2,7 +2,7 @@
 
 <!-- Owner: TODO · Last verified: YYYY-MM-DD -->
 
-Check this file before every query. Add a row whenever a wrong answer, failed query or confusing question is traced to a cause, so the same thing doesn't happen twice.
+Check this file before every query. Add a row whenever a wrong answer, failed query or confusing question is traced to a cause, so the same thing doesn't happen twice. Most new rows come from issue reports emailed to the BI team (see `report-issue.md`); use the report's date in **Found**.
 
 ## Data issues
 

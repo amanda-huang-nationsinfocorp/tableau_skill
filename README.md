@@ -1,8 +1,10 @@
 # tableau_skill
 
-A Claude skill that answers ad hoc business questions from our Tableau Cloud data: consistent with our Snowflake/dbt data model, using standard metric definitions and as few Tableau API calls as possible.
+A Claude skill that quickly answers ad hoc business questions from our Tableau Cloud data: consistent with our Snowflake/dbt data model, using standard metric definitions and as few Tableau API calls as possible.
 
-**Status:** scaffold. Most files have `TODO` markers to fill in.
+**Version:** 0.1.0 · **Status:** scaffold; most files have `TODO` markers to fill in.
+
+**Owner:** Amanda Huang
 
 ## Layout
 
@@ -17,10 +19,11 @@ tableau_skill/
 │       ├── known-issues.md      Data, environment and Tableau quirks
 │       ├── qa-template.md       Checks before answering
 │       ├── fail-safe.md         What to do when Claude can't answer; dashboard directory
+│       ├── report-issue.md      How Claude drafts and sends issue reports to the BI team
 │       ├── departments/         One file per Tableau department folder
 │       └── datasources/         One card per published datasource
 ├── templates/
-│   └── datasource-card.md       Copy this to create a new datasource card
+│   └── datasource-card.md       Template for creating a new datasource card
 └── evals/
     └── evals.json               Test questions and expected answers
 ```
@@ -35,32 +38,57 @@ tableau_skill/
 4. Use the datasource card by default, or an approved view when it answers the exact question; search Tableau if the data isn't in the skill.
 5. Run one aggregated query.
 6. Compute changes and ratios locally; run the QA checks.
-7. Answer with a headline, a small table and a receipt (plus a CSV above 10 rows).
-8. At any step, report issues to the BI team by email.
+7. Answer with a headline, a small table and a receipt (plus a CSV if above 10 rows).
+8. At any step, user can report issues to the BI team by email (`report-issue.md`).
 
 Target: **0 discovery calls and 1 Tableau query** for a typical question.
+
+## Testing
+
+Test questions live in `evals/evals.json`. Run them in a new Claude chat with the skill turned on, before every merge to `main` and after changes to the dbt models or Tableau datasources.
+
+| Requirement | Type | Passes when |
+|---|---|---|
+| Correct answer | Hard | The numbers match the dashboard for the same period and filters |
+| Right datasource | Hard | The receipt names the expected datasource or view |
+| Speed | Soft | The answer arrives within about 1 minute (not counting time waiting for the user's replies) |
+| Tableau calls | Soft | Fewer than 3 calls in total |
+| Discovery calls | Soft | None |
+
+- **Pass:** every requirement met.
+- **Pass with notes:** hard requirements met, a soft one missed. OK to merge; note the miss in the pull request.
+- **Fail:** a hard requirement missed. Don't merge.
+
+Each test question should name its expected datasource and the dashboard numbers to compare against.
 
 ## Maintaining the skill
 
 - **Add a datasource:** copy `templates/datasource-card.md` to `tableau/references/datasources/<name>.md`, fill it in, then add its path to the routing table in `SKILL.md` and its metrics to `glossary.md`.
 - **Add a department:** copy an existing file in `tableau/references/departments/`, then add a row to the routing table.
 - **Keep it current:** each card and department file has an owner and a "last verified" date. Re-verify after dbt or Tableau model changes, then rerun the evals.
-- **Log problems:** add every traced wrong answer or failed query to `known-issues.md`.
-- **Keep links flat:** `SKILL.md` should link every reference file directly (Claude may only partly read files that are linked from other reference files).
+- **Log problems:** add every traced wrong answer or failed query to `known-issues.md`. Most will arrive as issue-report emails (see `tableau/references/report-issue.md`).
 
-## Changes from the design doc
+## Best practices
 
-The design doc is "Tableau Skill Design.xlsx" in the Claude project "Tableau Skill".
+- **New branch for every change.** Never commit directly to `main`; every merge needs approval from a BI team member.
+- **Naming:** lowercase words joined by hyphens for all files and folders. Name datasource cards after the datasource (`daily-core-business-overview.md`) and department files after the Tableau folder (`internal-marketing.md`).
+- **Fill in `TODO(BI)` markers.** They mark content the BI team still has to supply. Search for `TODO` before a release.
+- **Keep every file under 500 lines.** Give any reference file over 100 lines a table of contents at the top, so Claude sees its full scope even when it reads only the start.
+- **Keep links flat.** Link every reference file directly from `SKILL.md`; Claude may only partly read files that are linked from other reference files.
+- **Define each metric once.** The glossary holds the standard name and aliases; the datasource card holds the formula. Point to them instead of repeating definitions.
+- **Use one term per concept.** For example, always "datasource card", never "card" in one file and "data sheet" in another.
+- **Never commit passwords, tokens or API keys.**
 
-- Added `glossary.md` (used in the Workflow tab but missing from the structure).
-- Added `evals/` and `templates/`.
-- Renamed `qa_template.md` to `qa-template.md` to match the other file names.
-- The routing table in `SKILL.md` lists department files and datasource cards directly, so no reference file depends on another.
+## Releasing an update
+
+Not in use yet: this starts once the repo syncs to our Claude organization as a plugin (see "Open decisions").
+
+1. Create a new branch and make changes there. Make sure to run tests before opening pull requests
+2. Open a pull request and merge to `main` once a BI team member approves.
+3. The merge syncs to Claude; everyone gets the new version in their next session.
 
 ## Open decisions
-
-- Routing table: teams, topics, Tableau folders, default traffic types, datasource cards.
+- All the TODOs
 - CLTV maturity windows: add to the glossary and datasource cards.
-- Rule for an incomplete current period.
-- BI team email address and the steps for sending issue reports.
-- How the skill is distributed to users.
+- BI team email address for issue reports (a shared inbox or group works best).
+- Distribution: make the repo private and restructure it into the plugin layout for GitHub sync.

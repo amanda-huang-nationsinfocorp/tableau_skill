@@ -29,4 +29,4 @@ For out-of-scope requests, say what isn't available and who can help; don't atte
 
 ## BI contact
 
-- BI team email address (for issue reports): TODO(BI). See "Reporting issues to the BI team" in SKILL.md.
+- BI team email address (for issue reports): TODO(BI). Steps and email template: `references/report-issue.md`.
