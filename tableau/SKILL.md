@@ -1,6 +1,6 @@
 ---
 name: tableau
-description: Answers ad hoc business-metric questions from the company's Tableau Cloud data (signups, conversions, revenue, chargebacks, super partner and vertical performance, marketing channels, split tests and other KPIs) using standardized metric definitions, the right datasource for each department, and as few Tableau calls as possible. Use this skill whenever someone asks for a number, trend, comparison or breakdown of a company KPI ("how did paid social signups do last month?", "chargeback rate by super partner", "MoM revenue"), mentions a Tableau dashboard, view or datasource, or names a team or department (internal marketing, external marketing, advertising, finance, billing, customer service, split test, company overview), even if they never say "Tableau".
+description: Answers ad hoc business-metric questions from the company's Tableau Cloud data (signups, conversions, revenue, chargebacks, super partner and vertical performance, marketing channels, split tests and other KPIs) using standardized metric definitions, the right datasource for each department, and as few Tableau calls as possible. Use this skill whenever someone asks for a number, trend, comparison or breakdown of a company KPI ("how did paid social signups do last month?", "chargeback rate by super partner", "MoM revenue"), mentions a Tableau dashboard, view or datasource
 ---
 
 <!-- TODO(BI): add the real KPI names and team names people use to the description above; it decides when the skill activates. -->
@@ -37,24 +37,26 @@ If you can't get a reliable answer at any step, follow `references/fail-safe.md`
 
 ## Routing table
 
-<!-- TODO(BI): fill in teams, topics, Tableau folders, default traffic types and datasource cards. One row per department. -->
+<!-- INCOMPLETE Datasource cards listed here are planned paths; the cards aren't written yet. -->
 
 | Department | Teams / aliases | Typical topics | Tableau folder | Default traffic type | Department file | Datasource cards |
 |---|---|---|---|---|---|---|
-| Internal Marketing | TODO | paid social, TODO | TODO | TODO | `references/departments/internal-marketing.md` | TODO |
-| External Marketing | TODO | TODO | TODO | TODO | `references/departments/external-marketing.md` | TODO |
-| Advertising | TODO | TODO | TODO | TODO | `references/departments/advertising.md` | TODO |
-| Finance | TODO | TODO | TODO | TODO | `references/departments/finance.md` | TODO |
-| Billing | TODO | chargebacks, TODO | TODO | TODO | `references/departments/billing.md` | TODO |
-| Customer Service | TODO | TODO | TODO | TODO | `references/departments/customer-service.md` | TODO |
-| Split Test | TODO | TODO | TODO | TODO | `references/departments/split-test.md` | TODO |
-| Company Overview | TODO | company-wide KPIs, TODO | TODO | TODO | `references/departments/company-overview.md` | TODO |
+| Internal Marketing | SEM, paid social, facebook, tiktok | SEM performance by brand, channel (paid search, display) and engine (Google, Bing); SEM intraday monitor; paid social campaign and ad set performance; paid social period comparison; remarketing (email/SMS, per the folder description) | `Internal Marketing` (subfolders `SEM`, `Paid Social`) | SEM: super partner `110 Internal_SEM`. Paid Social: traffic_type = `Paid` and Platform = `Facebook` | `references/departments/internal-marketing.md` | `references/datasources/daily-core-business-overview.md`; `references/datasources/intraday-hourly-conversion.md` (SEM intraday); `references/datasources/facebook-adset-performance.md` (paid social) |
+| External Marketing | external | super partner performance and deep dive; partner ID and affiliate ID breakdown; lead post success; weekly report | `External Marketing` | `IS_EXTERNAL_MARKETING` = True (super partner ID > 200) | `references/departments/external-marketing.md` | `references/datasources/daily-core-business-overview.md` |
+| Advertising | adv, remarketing | advertising performance (folder description); TODO | `Advertising` (no workbooks visible yet) | TODO | `references/departments/advertising.md` | TODO |
+| Finance | TODO | financial metrics, revenue tracking, operational cost analysis (folder description); TODO | `Finance` (no workbooks visible yet) | TODO | `references/departments/finance.md` | TODO |
+| Billing | TODO | chargebacks; TODO | `Billing` (no workbooks visible yet) | TODO | `references/departments/billing.md` | TODO |
+| Customer Service | CO, CSR, TSR | CSR/TSR performance, ticket resolution efficiency, customer cancels (folder description) | `Customer Service` (CSR and TSR subfolders; no workbooks visible yet) | TODO | `references/departments/customer-service.md` | TODO |
+| Split Test | ab testing | A/B test results by test ID (e.g., T1367): variant comparison, test breakdown, user journey | `Split Test` | None: each test dashboard covers one test | `references/departments/split-test.md` | `references/datasources/split-test-core.md`; `references/datasources/split-test-user-journey.md` |
+| Company Overview | TODO | company-wide KPIs; daily RE and Credco KPIs; company intraday monitor; company data explorer; user action tracking | `Company Overview` | All traffic | `references/departments/company-overview.md` | `references/datasources/daily-core-business-overview.md`; `references/datasources/intraday-hourly-conversion.md`; `references/datasources/user-action-tracking.md` |
 
 Datasource cards live at `references/datasources/<datasource-name>.md`. List each card's full path in the table above so it can be opened directly.
 
 **Default traffic type** is the traffic-type filter the department's dashboards apply by default. Use it unless the user asks for something else, and state it in the receipt.
 
-**Ignored Tableau folders** (never use as a source): TODO (e.g., sandbox, personal, archive folders).
+**Where datasources live:** published datasources are in the `Data Sources` folder (certified ones are marked). TODO(BI): `Data Sources/Internal Data Sources` holds building-block tables (e.g., `DIM_CALENDAR`, `AGG_ORDERS`); confirm whether Claude should ever query them directly.
+
+**Ignored Tableau folders** (never use as a source): Archive, Development, default, including their subfolders (e.g., `Development/Split Test`, `Development/Product Analysis`, `Samples`, `Admin Insights`); External Assets Default Project
 
 ## Ask vs. assume
 
