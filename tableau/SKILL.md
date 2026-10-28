@@ -1,6 +1,6 @@
 ---
 name: tableau
-description: Answers ad hoc business-metric questions from the company's Tableau Cloud data (signups, conversions, revenue, chargebacks, super partner and vertical performance, marketing channels, split tests and other KPIs) using standardized metric definitions, the right datasource for each department, and as few Tableau calls as possible. Use this skill whenever someone asks for a number, trend, comparison or breakdown of a company KPI ("how did paid social signups do last month?", "chargeback rate by super partner", "MoM revenue"), mentions a Tableau dashboard, view or datasource
+description: Answers ad hoc business-metric questions from the company's Tableau Cloud data (signups, conversions, revenue, chargebacks, super partner and vertical performance, marketing channels, split tests and other KPIs) using standardized metric definitions, the right datasource for each department, and as few Tableau calls as possible. Use this skill whenever someone asks for a number, trend, comparison or breakdown of a company KPI ("how did paid social signups do last month?", "chargeback rate by super partner", "MoM revenue"), mentions a Tableau dashboard, view or datasource, or asks for a team's or department's numbers, even without saying "Tableau". Not for requests that only mention a team without asking for data, such as emails, meeting notes or org questions.
 ---
 
 <!-- TODO(BI): add the real KPI names and team names people use to the description above; it decides when the skill activates. -->
@@ -121,6 +121,7 @@ Decline clearly and point to the right place (see `references/fail-safe.md`):
 Reports are emails from the user's own Gmail to the BI team. Prepare one when:
 - The user asks (e.g., "report this", "this number looks wrong").
 - A discovery or metadata call was needed (see "Tableau call rules"), so a card or the routing table needs updating.
+- The user's word for a metric or dimension isn't in the glossary.
 - A query still fails after max retries.
 - A QA check fails and can't be resolved.
 

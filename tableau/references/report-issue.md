@@ -50,7 +50,7 @@ Conversation link: <link, or "not provided">
 **Types** (pick one):
 - **Wrong number:** the user thinks a result is incorrect.
 - **Missing data:** the data couldn't be found, even after searching Tableau.
-- **Skill gap:** a discovery or metadata call was needed (outdated card, field not in the card, data not in the routing table).
+- **Skill gap:** a word isn't in the glossary, or a discovery or metadata call was needed (outdated card, field not in the card, data not in the routing table).
 - **Tableau error:** a query or view still fails after the retry.
 - **Other:** anything else.
 
