@@ -19,13 +19,15 @@ Keep it short and specific:
 
 For out-of-scope requests, say what isn't available and who can help; don't attempt a partial workaround.
 
-## Dashboard directory
+## Dashboard directory and approved views
 
-<!-- TODO(BI): one row per dashboard people should be sent to. -->
+Dashboards to send people to, and the approved views Claude can read with `get-view-data` when the user wants the number exactly as a dashboard shows it (SKILL.md step 4).
 
-| Department | Dashboard | URL | Use it for |
-|---|---|---|---|
-| TODO | TODO | TODO | TODO |
+<!-- TODO(BI): one row per dashboard. Fill View LUID and View filters only for views approved for dashboard-exact numbers. -->
+
+| Department | Dashboard | URL | View LUID | View filters | Use it for |
+|---|---|---|---|---|---|
+| TODO | TODO | TODO | TODO | TODO | TODO |
 
 ## BI contact
 

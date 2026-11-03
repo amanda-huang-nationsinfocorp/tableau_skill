@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "How did paid social signups do last month vs. the month before?",
-      "expected_output": "Routes to Internal Marketing and maps 'signups' to the standard signup metric. The period is clear, but neither vertical nor super partner is mentioned, so it asks for both before querying. Then 0 discovery calls and 1 query. Headline with the MoM % change, a 2-row table, a receipt (including the default traffic type) and a dashboard link. TODO(BI): add the expected numbers from the dashboard.",
+      "expected_output": "Routes to Internal Marketing – Paid Social and maps 'signups' to M0#. The period is clear, but neither vertical nor super partner is mentioned, so it asks for both before querying. Then 0 discovery calls and 1 query. Headline with the MoM % change, a 2-row table, a receipt (including the default traffic type) and a dashboard link. TODO(BI): add the expected numbers from the dashboard.",
       "files": []
     },
     {
@@ -22,7 +22,7 @@
     {
       "id": 4,
       "prompt": "Can you send me the emails of everyone who signed up last week?",
-      "expected_output": "Row-level data is allowed. Asks for vertical and super partner, then pulls the emails if available in Tableau: up to 500 rows, attached as a CSV (more than 10 rows), asking whether the user needs the full list if there are more. If no card lists an email field, uses an allowed metadata or discovery call and prepares a report to the BI team.",
+      "expected_output": "Row-level data is allowed. Asks for vertical and super partner, then pulls the emails if available in Tableau: up to 500 rows, attached as a CSV (more than 10 rows), asking whether the user needs the full list if there are more. If the glossary has no email field, uses an allowed metadata or discovery call and prepares a report to the BI team.",
       "files": []
     },
     {

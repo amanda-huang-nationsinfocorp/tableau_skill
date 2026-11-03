@@ -1,6 +1,6 @@
 # Query patterns
 
-Templates for the most common questions. Replace every `<...>` with the exact field caption, LUID or value from the datasource card. These are the parameters of the Tableau `query-datasource` and `get-view-data` tools.
+Templates for the most common questions. Replace every `<...>` with the exact field name and value from `glossary.md` and the LUID from `datasources.md`. These are the parameters of the Tableau `query-datasource` and `get-view-data` tools.
 
 ## Contents
 1. Metric by month, two periods (MoM)
@@ -16,7 +16,7 @@ Example: "How did paid social signups do last month vs. the month before?"
 
 ```json
 {
-  "datasourceLuid": "<from card>",
+  "datasourceLuid": "<LUID from datasources.md>",
   "query": {
     "fields": [
       { "fieldCaption": "<Date field>", "function": "TRUNC_MONTH", "fieldAlias": "Month", "sortDirection": "ASC", "sortPriority": 1 },
@@ -24,7 +24,7 @@ Example: "How did paid social signups do last month vs. the month before?"
     ],
     "filters": [
       { "field": { "fieldCaption": "<Date field>" }, "filterType": "QUANTITATIVE_DATE", "quantitativeFilterType": "RANGE", "minDate": "<first day of prior month>", "maxDate": "<last day of last month>" },
-      { "field": { "fieldCaption": "<Channel field>" }, "filterType": "SET", "values": ["<value from card>"] }
+      { "field": { "fieldCaption": "<Channel field>" }, "filterType": "SET", "values": ["<value from glossary>"] }
     ]
   },
   "limit": 100
@@ -39,7 +39,7 @@ Example: "Top 10 super partners by signups last month."
 
 ```json
 {
-  "datasourceLuid": "<from card>",
+  "datasourceLuid": "<LUID from datasources.md>",
   "query": {
     "fields": [
       { "fieldCaption": "<Super partner field>", "fieldAlias": "Super partner" },
@@ -53,7 +53,7 @@ Example: "Top 10 super partners by signups last month."
 }
 ```
 
-Use the real super partner column from the card, not a Tableau group or set (see known issues).
+Use the real super partner column from the glossary, not a Tableau group or set (see known issues).
 
 ## 3. Ratio metric
 
@@ -67,7 +67,7 @@ Pull the numerator and denominator as separate SUMs and divide locally. This kee
 ]
 ```
 
-If the card defines the metric as a Tableau formula, it can also be passed as a calculation:
+If the glossary's Calculation is a Tableau formula, it can also be passed as a calculation:
 
 ```json
 { "fieldCaption": "<Metric name>", "calculation": "SUM([<Numerator>]) / SUM([<Denominator>])", "fieldAlias": "<Metric name>" }
@@ -85,15 +85,15 @@ TODO(BI): confirm whether "last N months" should include the current partial mon
 
 ## 5. Dashboard-exact number from an approved view
 
-Use when the user wants the number exactly as shown on a dashboard. The view LUID and filter names are in the department file.
+Use when the user wants the number exactly as shown on a dashboard. The view LUID and filter names are in the dashboard directory in `fail-safe.md`.
 
 ```json
-{ "viewId": "<view LUID from department file>", "viewFilters": { "<Filter name>": "<value>" } }
+{ "viewId": "<view LUID from fail-safe.md>", "viewFilters": { "<Filter name>": "<value>" } }
 ```
 
 ## 6. Rules for every query
 
-- Use exact field captions from the card; never guess a caption.
+- Use the exact field name for the datasource from the glossary; never guess a field name.
 - One filter per field per query.
 - Request every measure, dimension and period in one query rather than several small ones.
 - Always aggregate; set `limit`.
