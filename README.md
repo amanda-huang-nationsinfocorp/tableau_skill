@@ -14,7 +14,8 @@ tableau_skill/
 ├── tableau/                     The skill itself (this folder is what gets installed)
 │   ├── SKILL.md                 When the skill activates, workflow, routing table, call rules, output template
 │   └── references/
-│       ├── glossary.md          Standard names, aliases, meanings, formulas, aggregation rules
+│       ├── glossary.md          Standard names, aliases, meanings, formulas
+│       ├── metric-rules.md      Signup funnel, cascades, aggregation and maturity rules
 │       ├── datasources.md       LUID, grain and refresh for each published datasource
 │       ├── query-patterns.md    Query templates for common questions
 │       ├── known-issues.md      Data, environment and Tableau quirks
@@ -90,7 +91,7 @@ Not in use yet: this starts once the repo syncs to our Claude organization as a 
 
 ## Open decisions
 - All the TODOs
-- CLTV maturity windows: finish the cohort-date rule in the glossary (section 4).
+- CLTV maturity windows: finish the cohort-date rule in `metric-rules.md` (section 4).
 - BI team email address for issue reports (a shared inbox or group works best).
 - Distribution: make the repo private and restructure it into the plugin layout for GitHub sync.
 - Weekly Tableau check: build the scheduled task and its email alert.

@@ -5,16 +5,17 @@
 Maps the user's words to standard metric and dimension names. Use the standard name in the answer and receipt. Each datasource's LUID, grain and refresh are in `datasources.md`.
 
 ## Contents
-1. How to use · 2. Columns · 3. Aggregation rules · 4. Maturity rules
+1. How to use · 2. Columns · 3. Verticals · 4. Super partners
 
 ## 1. How to use
 - Find the user's word in **Aliases**; use the **Standard name**.
 - Alias listed under more than one metric → use the row for the routed department; if still unclear, ask.
 - Word not listed → don't guess. Ask, and prepare a Skill gap report (`report-issue.md`).
+- **Verticals and super partners (sections 3 and 4):** matching isn't case sensitive (CO = co = Co). In filters, still use the value exactly as it appears in the table.
 
 ## 2. Columns
 
-Each column is defined once here, even when it appears in several datasources. A department's own version is a separate row named `<Metric> (<Department>)`. Type sets the aggregation (section 3).
+Each column is defined once here, even when it appears in several datasources. A department's own version is a separate row named `<Metric> (<Department>)`. Type sets the aggregation (`metric-rules.md`).
 
 **Column names.** Standard names are Tableau column names. The same column is spelled slightly differently across datasources: match ignoring case, `_` vs. space, a trailing `(Table name)`, and the `_TAG` suffix used in the Split Test datasource (`M0#_TAG` = `M0#`). `[ND]` means the column also exists in N-day windows (`Sale Amount [ND]` = `Sale Amount`, `Sale Amount 30D`, …); the N values are in Calculation.
 
@@ -48,7 +49,7 @@ Each column is defined once here, even when it appears in several datasources. A
 
 | Standard name | Aliases | Meaning | Calculation | Type |
 |---|---|---|---|---|
-| Vertical Type | vertical | Line of business: 'credco' = credit; RTO, Foreclosure and foreclosure_rto = real estate | Database column | Dimension |
+| Vertical Type | vertical | Line of business. Values and their names: section 3 | Database column | Dimension |
 | Vertical Type Bin | | TODO(BI) | Database column | Dimension |
 | Vertical Supar Light | | TODO(BI) | Database column | Dimension |
 | Brand Id Name | brand, Brand | Brand ID and name | Database column | Dimension |
@@ -56,8 +57,8 @@ Each column is defined once here, even when it appears in several datasources. A
 | Brand Name | | Brand name | Database column | Dimension |
 | Brand Name Abbr | | Brand abbreviation | Database column | Dimension |
 | Brand Identifier | | TODO(BI) | Database column | Dimension |
-| Super Partner Id Name | super partner, Super Partner, traffic source | Super partner ID and name; traffic-source breakdown (`dim_dimension_alpha`) | Database column | Dimension |
-| Super Partner Id | | Super partner ID. > 200 = external marketing; 183 = CASC D; 192 = CASC B and CASC P | Database column | Dimension |
+| Super Partner Id Name | super partner, Super Partner, traffic source | Super partner ID and name; traffic-source breakdown (`dim_dimension_alpha`). Top partners and their aliases: section 4 | Database column | Dimension |
+| Super Partner Id | | Super partner ID. > 200 = external marketing; 182 = CASC D; 192 = CASC B and CASC P | Database column | Dimension |
 | Super Partner Name | | The actual partner company, e.g. Homes, VB, SkyRocket, Reply † | Database column | Dimension |
 | IS_EXTERNAL_MARKETING | external marketing | True for external marketing traffic | `[Super Partner Id] > 200` | Dimension |
 | Partner Id Name | partner, Partner | Partner ID and name | Database column | Dimension |
@@ -88,7 +89,7 @@ Each column is defined once here, even when it appears in several datasources. A
 
 ### Orders and conversion
 
-**Signup funnel.** Visitors attempt to sign up. A successful trial signup is M0; a hard decline is D0; a soft decline becomes a cascade (CASC D, see below). After signup: C0 = cancels the same day, C1 = cancels later (before the first bill), M1 = gets through the trial and pays the first subscription, D1 = trial was fine but the first subscription payment was declined. M1.N = keeps paying after M1 (M2, M3, …). BIN tiers 1–2 are good BINs; tiers 3–4 are bad BINs.
+Signup funnel (M0, D0, C0, C1, M1, D1, M1.N): see `metric-rules.md`.
 
 | Standard name | Aliases | Meaning | Calculation | Type |
 |---|---|---|---|---|
@@ -100,7 +101,7 @@ Each column is defined once here, even when it appears in several datasources. A
 | Bin First | | BIN (first 6 card digits) of the signup payment † | Database column | Dimension |
 | Card Type First | | Card type of the signup payment: Visa, MC, Amex, Discover † | Database column | Dimension |
 | Merchant Processor Id First | | TODO(BI) | Database column | Dimension |
-| M0# | converted, signups, sign-ups, trial signups, sales, M0 Count, M0 Cnt, Is M0 | Successful trial signups: visitors who signed up for the trial. Excludes cascades (CASC) | `SUM([M0 Count])` | Count |
+| M0# | converted, signups, sign-ups, trial signups, sales, M0 Count, M0 Cnt, Is M0 | Successful trial signups: visitors who signed up for the trial. Cascades: see `metric-rules.md` | `SUM([M0 Count])` | Count |
 | D0# | hard declines, D0 Count, Is D0 | Hard declines: signup attempts declined at signup (soft declines go to CASC D instead) | `SUM([D0 Count])` | Count |
 | C0# | same-day cancels, C0 Count, Is C0 | Same-day cancels: M0s who cancel on the signup day (calendar day, PST †) | `SUM([C0 Count])` | Count |
 | V0# | V0 Count, Is V0 | Static verifications: Credco customers verified successfully † | `SUM([V0 Count])` | Count |
@@ -119,8 +120,8 @@ Each column is defined once here, even when it appears in several datasources. A
 | M0 FOR M1% | | Share of M0s eligible for the first bill | `[M0 FOR M1#] / [M0#]` | Ratio |
 | M1% | | First-bill rate: share of eligible M0s who paid the first subscription | `[M1#] / [M0 FOR M1#]` | Ratio |
 | M1.N% | | Share of eligible M0s who kept paying after M1 | `[M1.N#] / [M0 FOR M1#]` | Ratio |
-| C1% | | Later-cancel rate | `[C1#] / [M0#]` (differs by datasource, see below) | Ratio |
-| D1% | | First-bill decline rate | `[D1#] / [M0#]` (differs by datasource, see below) | Ratio |
+| C1% | | Later-cancel rate | `[C1#] / [M0#]` (differs by datasource, see `known-issues.md`) | Ratio |
+| D1% | | First-bill decline rate | `[D1#] / [M0#]` (differs by datasource, see `known-issues.md`) | Ratio |
 | M0_CASHAPP_COUNT | Is M0 Cashapp | M0s whose first payment used a Cash App BIN † | Database column | Count |
 | M0 CASHAPP% | | Share of M0s whose first payment used a Cash App BIN † | `SUM([M0 Cashapp Count]) / SUM([M0 Count])` | Ratio |
 | M0_MOBILE_COUNT | Is M0 Mobile | M0s from a mobile device † | Database column | Count |
@@ -135,13 +136,13 @@ Each column is defined once here, even when it appears in several datasources. A
 
 ### Cascade (CASC)
 
-Cascades are signups we don't accept normally (soft declines and bad BINs) but give a separate chance to sign up. They aren't counted in M0#. They're reported under super partner 183 (CASC D) and 192 (CASC B and CASC P), but originally come from regular super partners.
+How cascades count in M0#: see `metric-rules.md`.
 
 | Standard name | Aliases | Meaning | Calculation | Type |
 |---|---|---|---|---|
 | CASC ALL# | Casc All Count, Casc Count | All cascades: CASC B + CASC D + CASC P | `[CASC B#] + [CASC D#] + [CASC P#]` | Count |
 | CASC B# | Casc B Count, Is Casc B | Cascades from bad BINs, tier 4 (super partner 192) | `SUM([Casc B Count])` | Count |
-| CASC D# | soft declines, Casc D Count, Is Casc D | Cascades from soft declines (super partner 183) | `SUM([Casc D Count])` | Count |
+| CASC D# | soft declines, Casc D Count, Is Casc D | Cascades from soft declines (super partner 182) | `SUM([Casc D Count])` | Count |
 | CASC P# | Casc P Count, Is Casc P | Cascades from bad BINs, tier 3 (super partner 192). Not prepaid | `SUM([Casc P Count])` | Count |
 | CASC SUCCESS# | Casc Success Count, Is Casc Success | Successful cascade signups | `COUNTD(IF [Is Casc Success] = 1 THEN [Order Id] END)` | Count |
 | CASC FAIL# | Casc Fail Count, Is Casc Fail | Failed cascade signups | `COUNTD(IF [Is Casc Fail] = 1 THEN [Order Id] END)` | Count |
@@ -186,10 +187,10 @@ Cascades are signups we don't accept normally (soft declines and bad BINs) but g
 
 | Standard name | Aliases | Meaning | Calculation | Type |
 |---|---|---|---|---|
-| MKT COST$ | marketing cost | Marketing cost, based on CPA, CPC or CPV; calculated separately for RE and Credco † | `SUM(IF [Vertical Type] = "credco" THEN ZN([Mkt Cost Credco]) ELSE ZN([Mkt Cost Re]) END)` (differs by datasource, see below) | Amount |
+| MKT COST$ | marketing cost | Marketing cost, based on CPA, CPC or CPV; calculated separately for RE and Credco † | `SUM(IF [Vertical Type] = "credco" THEN ZN([Mkt Cost Credco]) ELSE ZN([Mkt Cost Re]) END)` (differs by datasource, see `known-issues.md`) | Amount |
 | MKT COST RE$ | Mkt Cost Re | Marketing cost for RE brands: (internal CPA + external CPA) × M0 count † | `SUM([Mkt Cost Re])` | Amount |
 | MKT COST CREDCO$ | Mkt Cost Credco | Marketing cost for Credco brands: (internal CPA + external CPA) × V0R count † | `SUM([Mkt Cost Credco])` | Amount |
-| CPA$ | CPA, cost per acquisition, Cpa Dollar | Cost per acquisition: marketing cost per M0 | `[MKT COST$] / [M0#]` (differs by datasource, see below) | Ratio |
+| CPA$ | CPA, cost per acquisition, Cpa Dollar | Cost per acquisition: marketing cost per M0 | `[MKT COST$] / [M0#]` (differs by datasource, see `known-issues.md`) | Ratio |
 | CPA RE$ | | Cost per acquisition for RE brands | `[MKT COST RE$] / [M0#]` | Ratio |
 | CPA CREDCO$ | | Cost per acquisition for Credco brands | `[MKT COST CREDCO$] / [M0#]` | Ratio |
 | CPA$ (PARTNER-BASED) | | Cost per acquisition (Paid Social AFID Quality version) | `SUM(IF [Vertical Type] = "credco" THEN [Mkt Cost Credco] ELSE [Mkt Cost Re] END) / SUM([M0 Count])` | Ratio |
@@ -213,9 +214,9 @@ Cascades are signups we don't accept normally (soft declines and bad BINs) but g
 | SERVER_VISITOR_COUNT | | Server Visits: visits from daily server logs, counted before users reach P2 or JEDI; unique by XID too and no bot filtering, so usually higher than VISITORS# † | Database column | Count |
 | POST SUCCESS# | lead post success | Successful lead posts | `SUM([LEAD_POST_SUCCESS_COUNT])` | Count |
 | LANDED RATE% | | TODO(BI) | `[VISITORS#] / [POST SUCCESS#]` | Ratio |
-| LEAD ACCEPTED# | Lead Accepted Count | Agent leads accepted by an advertising partner † | `SUM([Lead Accepted Count])` (differs by datasource, see below) | Count |
+| LEAD ACCEPTED# | Lead Accepted Count | Agent leads accepted by an advertising partner † | `SUM([Lead Accepted Count])` (differs by datasource, see `known-issues.md`) | Count |
 | LEAD CAPTURE# | | Completed leads | `COUNTD(IF [Lead Status] = 'completed' THEN [Lead Id] END)` | Count |
-| SMS CAPTURE# | SMS CAPTURES#, Sms Capture Count | SMS captures | `SUM([Sms Capture Count])` (differs by datasource, see below) | Count |
+| SMS CAPTURE# | SMS CAPTURES#, Sms Capture Count | SMS captures | `SUM([Sms Capture Count])` (differs by datasource, see `known-issues.md`) | Count |
 | SMS CAPTURES% | | SMS captures per visitor | `[SMS CAPTURE#] / [VISITORS#]` | Ratio |
 
 ### Ad platform
@@ -235,12 +236,12 @@ Cascades are signups we don't accept normally (soft declines and bad BINs) but g
 | PLATFORM_AD_NAME | | Ad name on the ad platform | Database column | Dimension |
 | Audience Type | | Audience type | Database column | Dimension |
 | Creative Type | | Creative type | Database column | Dimension |
-| SPEND$ | spend, Spend | Ad platform spend | `SUM([Spend])` (differs by datasource, see below) | Amount |
-| IMPRESSIONS# | impressions, Impressions | Ad impressions | `SUM([Impressions])` (differs by datasource, see below) | Count |
-| CLICKS# | clicks, Clicks | Ad clicks | `SUM([Clicks])` (differs by datasource, see below) | Count |
-| CTR% | click-through rate, Ctr Pct | Click-through rate | `SUM([Clicks]) / SUM([Impressions])` (differs by datasource, see below) | Ratio |
-| CPC$ | cost per click, Cpc Dollar | Cost per click | `SUM([Spend]) / SUM([Clicks])` (differs by datasource, see below) | Ratio |
-| CPM$ | Cpm Dollar | Cost per 1,000 impressions | `SUM([Spend]) / SUM([Impressions]) * 1000` (differs by datasource, see below) | Ratio |
+| SPEND$ | spend, Spend | Ad platform spend | `SUM([Spend])` (differs by datasource, see `known-issues.md`) | Amount |
+| IMPRESSIONS# | impressions, Impressions | Ad impressions | `SUM([Impressions])` (differs by datasource, see `known-issues.md`) | Count |
+| CLICKS# | clicks, Clicks | Ad clicks | `SUM([Clicks])` (differs by datasource, see `known-issues.md`) | Count |
+| CTR% | click-through rate, Ctr Pct | Click-through rate | `SUM([Clicks]) / SUM([Impressions])` (differs by datasource, see `known-issues.md`) | Ratio |
+| CPC$ | cost per click, Cpc Dollar | Cost per click | `SUM([Spend]) / SUM([Clicks])` (differs by datasource, see `known-issues.md`) | Ratio |
+| CPM$ | Cpm Dollar | Cost per 1,000 impressions | `SUM([Spend]) / SUM([Impressions]) * 1000` (differs by datasource, see `known-issues.md`) | Ratio |
 
 ### Intraday pacing
 
@@ -287,40 +288,89 @@ Cascades are signups we don't accept normally (soft declines and bad BINs) but g
 
 ### Technical and helper fields
 
-Workbook helpers, keys, data-status fields and columns used only inside other calculations. Don't report them as metrics or dimensions; status fields may be needed as filters (see Known differences).
+Workbook helpers, keys, data-status fields and columns used only inside other calculations. Don't report them as metrics or dimensions; status fields may be needed as filters (see `known-issues.md`).
 
 AD ID Text Filter, Intraday AD_ID Text Filter, Parent ADID Text Filter, Calendar Date Text, Week Starting Text, Month Starting Text, Date Range Control, Yesterday, REPORTING PERIOD, Detail Reporting Period, DIMENSION 1, DIMENSION 2, DIMENSION 3, Exclude Calendar Day, Keep Non-Excluded Days, Is Comparable Hour, Is Reporting Date, Last Comparable Hour, Last Complete Hour, Latest Order Event At La, Model Refreshed At, Model Refreshed At La, Faas Updated Date Pst, Jedi Updated Date Pst, Cost Data Status, VISITOR_DATA_STATUS, DIMENSION_MAPPING_STATUS, Row Type, Row Key, FACT_ROW_KEY, Surrogate Key, ID, Tag Id Index, Week Diff, Variant, Total Spend For Parent Adid, Adset Count For Parent Adid, Campaign Count For Parent Adid, M0 Adset Allocated Raw Count, M0 Parent Adid Actual Count, M0 Remaining Units, Casc All Adset Allocated Raw Count, Casc All Parent Adid Actual Count, Casc All Remaining Units, Mkt Cost Int Re, Mkt Cost Ext Re, Mkt Cost Ext Credco
 
-### Known differences between datasources
+## 3. Verticals
 
-The same column name has different logic in different datasources. Until each is resolved, say in the receipt which datasource's version was used.
+Values exactly as they appear in the data (lowercase); use them as-is in filters. Checked in Daily Core Business Overview and SEM Daily Performance on 2026-11-05.
 
-<!-- TODO(BI): for each, keep one calculation or split it into separate rows. -->
+| Standard name | Aliases | Notes |
+|---|---|---|
+| credco | credit | Credit |
+| foreclosure | foreclosures | Real estate |
+| rto | rent to own | Real estate |
+| foreclosure_rto | FORTO | Real estate |
 
-- **C1%, D1%:** ÷ M0# in Daily Core Business Overview, Paid Social AFID Quality and both SEM datasources; ÷ M0 FOR M1# in Core Operations & Conversion Master and Split Test.
-- **CPA$:** MKT COST$ per M0# in Daily Core Business Overview; Spend ÷ M0 Count, only when cost data is connected, in Facebook Adset Performance; SEM cost ÷ M0 Count, only when cost is complete, in both SEM datasources.
-- **MKT COST$:** Credco/RE marketing cost in Daily Core Business Overview and Paid Social AFID Quality; SEM cost in both SEM datasources.
-- **SPEND$:** Spend in Facebook Adset Performance; MKT COST$ in SEM Daily Performance.
-- **IMPRESSIONS#, CLICKS#, CTR%, CPC$, CPM$:** in SEM Daily Performance they return NULL unless cost data is complete (`MIN([Cost Complete Flag]) = 1`), and CPC$ and CPM$ use Sem Cost instead of Spend.
-- **SMS CAPTURE#:** sum of Sms Capture Count in Daily Core Business Overview and Paid Social AFID Quality; named SMS CAPTURES# and counted as distinct phones on completed SMS leads in Core Operations & Conversion Master and Split Test.
-- **LEAD ACCEPTED#:** sum of Lead Accepted Count in Daily Core Business Overview and Paid Social AFID Quality; distinct Lead Ids with Lead Submission Status = 'success' in Core Operations & Conversion Master.
-- **RETURNS$% and REF,VOID,CB,RDR$%:** same formula under two names (Paid Social AFID Quality vs. Core Operations & Conversion Master).
 
-## 3. Aggregation rules
+- **Real estate (RE)** = foreclosure, rto and foreclosure_rto together. In cost metrics, RE means every vertical except credco (MKT COST$ uses Mkt Cost Re for anything that isn't credco).
+- **Not every datasource has every vertical.** SEM Daily Performance has only credco, foreclosure and rto, and a filter with a value that isn't there fails (`known-issues.md` T-012). Filter real estate there with foreclosure and rto only.
 
-| Type | How to aggregate |
-|---|---|
-| Dimension | Group by or filter |
-| Count, Amount | SUM |
-| Ratio (rates, per-unit values, averages) | SUM(numerator) / SUM(denominator); never average a ratio |
-| Distinct count | COUNTD; not additive, so query the total directly |
-| Flag (0/1 on each order) | Count orders where the flag is 1: COUNTD(IF [flag] = 1 THEN [Order Id] END) |
-| Table calc | Compares rows within one result (e.g., each variant vs. the first); pull the underlying metric and compute locally |
+## 4. Super partners
 
-## 4. Maturity rules
+The 50 super partners with the most M0s, including 182 and 192. Together they have 99.9% of all M0s in Daily Core Business Overview (all data through 2026-11-04, checked 2026-11-05). **Standard name** is the value of `SUPER_PARTNER_ID_NAME`; the number at the start is the ID.
 
-| Metric | Matures after | Measured from | Rule |
-|---|---|---|---|
-| CLTV 0-30$, CLTV 0-60$, CLTV 0-360$, NET CLTV 0-30$ | N days (30, 60, 360; CLTV 0-360$ = one year) | Cohort date, usually order date | Latest usable cohort date = today − N. If part of the period isn't mature, cut it at the last mature date and say so |
+- **ID or alias in the table** → use that row.
+- **Not in the table** → apply the abbreviation rules below, then find the partner in the data:
+  - The result stays under 501 rows → group the main query by `SUPER_PARTNER_ID_NAME` and pick the rows afterwards (no extra call).
+  - Otherwise → one query listing `SUPER_PARTNER_ID_NAME` first.
+- **More than one match** → ask. **No match** → ask, and prepare a Skill gap report (`report-issue.md`).
+- **Filter by ID** (a number, e.g. `[233]`), not by name.
 
-<!-- TODO(BI): confirm whether the same rule applies to the other N-day columns (Cb Count 30D, CB30#%, Refund Amount 30D, …) and whether `Ecltv 1 Y Ready` in DIM_CALENDAR marks mature dates. -->
+**Abbreviation rules** (partners not in the table):
+- The first few words, shortened: 441 Big Steps Marketing → Big Steps
+- First letter of each word: Consumer Opportunity → CO, Zero Parallel → ZP.
+
+| Standard name | Aliases | Notes |
+|---|---|---|
+| 100 NIC | default, catch all | |
+| 101 NIC Login | default, catch all | |
+| 110 Internal_SEM | SEM | Default for SEM |
+| 111 Internal_Social | Social | |
+| 113 Internal_Browser_Alerts | | |
+| 114 Internal_SMS | SMS | |
+| 120 Internal_SEO | SEO, search | |
+| 130 Internal_Criteo | | |
+| 131 Internal_Email | Email | |
+| 141 Internal_Ancillary_Revenue |Internal Ancillary | |
+| 182 Internal_New_Cascade_Declines | casc d| CASC D (`metric-rules.md` section 2) |
+| 192 Internal_New_Cascade_Non-Declines | casc b and p, casc none decline | CASC B and CASC P (`metric-rules.md` section 2) |
+| 201 LeadQual | | |
+| 202 OPO | | |
+| 206 LidoLabs | Lido | |
+| 208 MediaLot LLC | MediaLot | |
+| 210 Xanadu Marketing | Xanadu | |
+| 224 Perform CB | | |
+| 225 Realtor.com | Realtor | |
+| 228 EPCVIP |  | |
+| 233 Zero Parallel LLC | ZP | |
+| 237 DOT818 | DOT | |
+| 238 IT Media | | |
+| 239 Flux Marketing Group | Flux | |
+| 240 Cordless Media | | |
+| 241 Express Revenue | | |
+| 244 Leadsgate (Brainsome Ltd) | Leadsgate | |
+| 246 B2 Direct | | |
+| 248 Stop Go Networks | Stop Go | |
+| 252 Consumer Opportunity | CO | |
+| 302 HomeFinder | | |
+| 305 ZIP Foreclosures | | |
+| 306 US Lease Option | US Lease | |
+| 401 RateSpecial | | |
+| 406 MaxBounty | | |
+| 417 Fluent | | |
+| 441 Big Steps Marketing | Big Steps | |
+| 442 FirstChoice.Credit | FirstChoice | |
+| 478 RxMG | | |
+| 479 Bright Horizons Media | | |
+| 488 JD Atlantic | JD | |
+| 490 eMedia Group | eMedia | |
+| 494 Cash Network | | |
+| 500 Obsidian | | |
+| 503 Highwinds LLC | | |
+| 504 Bume Intl  Bume | |
+| 507 Billy.com Leadgen Network Organization | Billy, Billy.com | |
+| 1011 PingYo | | |
+| 1012 Market Bullet | | |
+| 1013 Harman Interactive Marketing | Harman | |

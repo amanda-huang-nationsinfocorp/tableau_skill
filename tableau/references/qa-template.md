@@ -10,6 +10,7 @@ Run these checks before answering. Most need no extra Tableau call. If a check f
 ## 2. Is the data internally consistent?
 - [ ] Parts add up to the total (breakdown vs. overall), allowing for distinct counts, which don't add up.
 - [ ] Ratios are SUM/SUM, not averages of ratios.
+- [ ] Cascades follow `metric-rules.md`: super partners 182 and 192 are left out of super-partner breakdowns, and CASC ALL# isn't added to a vertical or company M0#.
 - [ ] No unexpected nulls, zeros or duplicate rows.
 - [ ] Row count is plausible for the grain and filters.
 

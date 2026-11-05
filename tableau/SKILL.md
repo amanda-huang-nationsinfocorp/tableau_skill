@@ -21,7 +21,7 @@ Answer business questions with numbers that match our Tableau dashboards, using 
 Follow these steps in order. Steps 1–4 and 6–7 use only the files in this skill, with no Tableau calls, unless the data isn't in the routing table (step 4).
 
 1. **Identify the department.** Use the routing table below. Route by the question's topic first; use the user's own team only as a tie-breaker. If it's still unclear, ask once which department's data they need, offering the departments in the routing table as options. 
-2. **Understand the question.** Map the user's words to standard metric names with `references/glossary.md`.
+2. **Understand the question.** Map the user's words to standard metric names with `references/glossary.md`, then apply `references/metric-rules.md` (signup funnel, cascades, aggregation, maturity).
 3. **Clarify or assume.** See "Ask vs. assume" below. Ask at most 3 short questions, and only for things that change the answer. Offer valid values from the glossary as options.
 4. **Route to data.**
    - By default, query the department's datasource from the routing table. Its LUID is in `references/datasources.md`; field names and formulas are in the glossary.
@@ -137,6 +137,7 @@ Open only what the current step needs.
 | File | Read when |
 |---|---|
 | `references/glossary.md` | Steps 2–5: standard names, aliases, meanings, formulas and key values |
+| `references/metric-rules.md` | Steps 2–6: signup funnel, cascades and M0#, aggregation and maturity rules |
 | `references/datasources.md` | Steps 4–5: LUID, grain and refresh for each datasource in the routing table |
 | `references/query-patterns.md` | Step 5: query templates |
 | `references/known-issues.md` | Step 5: known data and tool quirks, before every query |
